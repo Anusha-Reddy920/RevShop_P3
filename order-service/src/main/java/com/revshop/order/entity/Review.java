@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reviews",
-       uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "productId", "orderId"}))
+@Table(name = "reviews", uniqueConstraints = @UniqueConstraint(columnNames = { "userId", "productId", "orderId" }))
 public class Review {
 
     @Id
@@ -34,7 +33,8 @@ public class Review {
     public Review() {
     }
 
-    public Review(Long id, Long userId, Long productId, Long orderId, Integer rating, String comment, LocalDateTime createdAt) {
+    public Review(Long id, Long userId, Long productId, Long orderId, Integer rating, String comment,
+            LocalDateTime createdAt) {
         this.id = id;
         this.userId = userId;
         this.productId = productId;
@@ -101,13 +101,17 @@ public class Review {
     }
 
     @PrePersist
-    protected void onCreate() {
+    protected void onPrePersist() {
         createdAt = LocalDateTime.now();
+        validateRating();
     }
 
-    @PrePersist
     @PreUpdate
-    protected void validateRating() {
+    protected void onPreUpdate() {
+        validateRating();
+    }
+
+    private void validateRating() {
         if (rating == null || rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 1 and 5");
         }
