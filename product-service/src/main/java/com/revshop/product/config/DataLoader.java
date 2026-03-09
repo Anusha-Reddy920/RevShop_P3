@@ -85,7 +85,7 @@ public class DataLoader {
     }
 
     private Product createProduct(String name, String description, Double price, Double mrp,
-                                   Integer quantity, Long categoryId, Long sellerId, String imageUrl) {
+                                  Integer quantity, Long categoryId, Long sellerId, String imageUrl) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
