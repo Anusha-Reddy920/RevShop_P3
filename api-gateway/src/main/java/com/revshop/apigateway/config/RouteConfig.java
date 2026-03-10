@@ -29,6 +29,12 @@ public class RouteConfig {
                         .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
                         .uri("lb://product-service"))
 
+                // Product categories - Requires JWT
+                .route("category-service", r -> r
+                        .path("/api/categories/**")
+                        .filters(f -> f.filter(jwtAuthenticationFilter.apply(new JwtAuthenticationFilter.Config())))
+                        .uri("lb://product-service"))
+
                 // Seller Product Management - Requires JWT
                 .route("seller-service", r -> r
                         .path("/api/seller/**")

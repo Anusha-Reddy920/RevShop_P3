@@ -17,7 +17,9 @@ import javax.crypto.SecretKey;
 @Component
 public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAuthenticationFilter.Config> {
 
-    private static final SecretKey KEY = Keys.hmacShaKeyFor("mysecretkeymysecretkeymysecretkey12".getBytes());
+    private static final SecretKey KEY = Keys.hmacShaKeyFor(
+            "revshop-secret-key-for-jwt-token-generation-p3-2024".getBytes()
+    );
 
     public JwtAuthenticationFilter() {
         super(Config.class);
@@ -27,6 +29,11 @@ public class JwtAuthenticationFilter extends AbstractGatewayFilterFactory<JwtAut
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
+
+            // Skip JWT validation for CORS preflight requests
+            if (request.getMethod().name().equals("OPTIONS")) {
+                return chain.filter(exchange);
+            }
 
             // Extract JWT token from Authorization header
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
