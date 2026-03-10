@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "product-service", url = "${services.product.url}")
+@FeignClient(name = "product-service")
 public interface ProductServiceClient {
 
-    @GetMapping("/api/products/{productId}/stock")
+    @GetMapping("/api/internal/products/{productId}")
     Integer getProductStock(@PathVariable("productId") Long productId);
 
-    @PutMapping("/api/products/{productId}/stock")
+    @PutMapping("/api/internal/products/{productId}/stock")
     void updateProductStock(@PathVariable("productId") Long productId, @RequestParam("quantity") Integer quantity);
 }

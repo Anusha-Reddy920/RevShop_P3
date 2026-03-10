@@ -87,14 +87,14 @@ public class PaymentServiceImpl implements PaymentService {
 
             // Update transaction status
             transaction.setStatus(PaymentStatus.COMPLETED);
+            session.setPaymentMethod(request.getPaymentMethod());
+            session.setPaymentStatus(PaymentStatus.COMPLETED);
 
             // Create order in order-service
             Long orderId = createOrder(session);
             transaction.setOrderId(orderId);
 
             // Update checkout session
-            session.setPaymentMethod(request.getPaymentMethod());
-            session.setPaymentStatus(PaymentStatus.COMPLETED);
             session.setStatus(CheckoutStatus.COMPLETED);
             checkoutSessionRepository.save(session);
 
@@ -212,6 +212,7 @@ public class PaymentServiceImpl implements PaymentService {
         orderRequest.setContactName(session.getContactName());
         orderRequest.setPhoneNumber(session.getPhoneNumber());
         orderRequest.setPaymentMethod(session.getPaymentMethod().name());
+        orderRequest.setPaymentStatus(session.getPaymentStatus().name());
         orderRequest.setTotalAmount(session.getTotalAmount());
 
         // Convert cart items to order items
@@ -219,6 +220,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(item -> new CreateOrderRequest.OrderItemRequest(
                         item.getProductId(),
                         item.getProductName(),
+                        item.getSellerId(),
                         item.getQuantity(),
                         item.getPrice()
                 ))

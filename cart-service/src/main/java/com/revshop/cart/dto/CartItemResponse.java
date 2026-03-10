@@ -6,6 +6,7 @@ public class CartItemResponse {
     private Long productId;
     private String productName;
     private Double productPrice;
+    private Long sellerId;
     private Integer quantity;
     private Double subtotal;
 
@@ -14,11 +15,12 @@ public class CartItemResponse {
     }
 
     public CartItemResponse(Long cartItemId, Long productId, String productName,
-                          Double productPrice, Integer quantity, Double subtotal) {
+                          Double productPrice, Long sellerId, Integer quantity, Double subtotal) {
         this.cartItemId = cartItemId;
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
+        this.sellerId = sellerId;
         this.quantity = quantity;
         this.subtotal = subtotal;
     }
@@ -54,6 +56,14 @@ public class CartItemResponse {
 
     public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
     }
 
     public Integer getQuantity() {

@@ -4,6 +4,8 @@ import com.revshop.order.dto.CreateOrderRequest;
 import com.revshop.order.dto.OrderItemResponse;
 import com.revshop.order.dto.OrderResponse;
 import com.revshop.order.entity.*;
+import com.revshop.order.client.ProductServiceClient;
+import com.revshop.order.dto.ProductDto;
 import com.revshop.order.exception.OrderNotFoundException;
 import com.revshop.order.exception.UnauthorizedException;
 import com.revshop.order.repository.OrderRepository;
@@ -21,10 +23,12 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final NotificationService notificationService;
+    private final ProductServiceClient productServiceClient;
 
-    public OrderServiceImpl(OrderRepository orderRepository, NotificationService notificationService) {
+    public OrderServiceImpl(OrderRepository orderRepository, NotificationService notificationService, ProductServiceClient productServiceClient) {
         this.orderRepository = orderRepository;
         this.notificationService = notificationService;
+        this.productServiceClient = productServiceClient;
     }
 
     @Override
@@ -32,7 +36,6 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse createOrder(CreateOrderRequest request) {
         Order order = new Order();
         order.setUserId(request.getUserId());
-        order.setTotalAmount(request.getTotalAmount());
         order.setShippingAddress(request.getShippingAddress());
         order.setBillingAddress(request.getBillingAddress());
         order.setContactName(request.getContactName());
@@ -42,16 +45,32 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
 
+        double calculatedTotalAmount = 0.0;
+
         for (CreateOrderRequest.OrderItemRequest itemRequest : request.getItems()) {
+            ProductDto product = productServiceClient.getProductById(itemRequest.getProductId());
+            if (product == null) {
+                throw new IllegalStateException("Product not found: " + itemRequest.getProductId());
+            }
+
+            Double actualPrice = product.getPrice();
+            Long actualSellerId = product.getSellerId();
+
             OrderItem orderItem = new OrderItem();
-            orderItem.setProductId(itemRequest.getProductId());
-            orderItem.setProductName(itemRequest.getProductName());
-            orderItem.setSellerId(itemRequest.getSellerId());
+            orderItem.setProductId(product.getId());
+            orderItem.setProductName(product.getName());
+            orderItem.setSellerId(actualSellerId);
             orderItem.setQuantity(itemRequest.getQuantity());
-            orderItem.setPriceAtPurchase(itemRequest.getPriceAtPurchase());
-            orderItem.setSubtotal(itemRequest.getQuantity() * itemRequest.getPriceAtPurchase());
+            orderItem.setPriceAtPurchase(actualPrice);
+            
+            double subtotal = itemRequest.getQuantity() * actualPrice;
+            orderItem.setSubtotal(subtotal);
+            calculatedTotalAmount += subtotal;
+
             order.addOrderItem(orderItem);
         }
+
+        order.setTotalAmount(calculatedTotalAmount);
 
         Order savedOrder = orderRepository.save(order);
 

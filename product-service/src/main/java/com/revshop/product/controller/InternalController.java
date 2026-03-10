@@ -41,4 +41,13 @@ public class InternalController {
         productService.updateStock(id, request.getQuantity());
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{id}/rating")
+    public ResponseEntity<Void> updateRating(
+            @PathVariable Long id,
+            @RequestParam Double rating) {
+        log.info("INTERNAL: PUT /api/internal/products/{}/rating - rating: {}", id, rating);
+        productService.updateRating(id, rating);
+        return ResponseEntity.ok().build();
+    }
 }

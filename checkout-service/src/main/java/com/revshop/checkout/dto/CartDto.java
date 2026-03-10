@@ -1,12 +1,19 @@
 package com.revshop.checkout.dto;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CartDto {
 
+    @JsonProperty("cartId")
     private Long id;
+    
     private Long userId;
     private List<CartItemDto> items;
+    
+    @JsonProperty("totalPrice")
     private Double totalAmount;
 
     public CartDto() {
@@ -51,22 +58,31 @@ public class CartDto {
         this.totalAmount = totalAmount;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class CartItemDto {
+        
+        @JsonProperty("cartItemId")
         private Long id;
+        
         private Long productId;
         private String productName;
+        private Long sellerId;
         private Integer quantity;
+        
+        @JsonProperty("productPrice")
         private Double price;
+        
         private Double subtotal;
 
         public CartItemDto() {
         }
 
         public CartItemDto(Long id, Long productId, String productName,
-                          Integer quantity, Double price, Double subtotal) {
+                          Long sellerId, Integer quantity, Double price, Double subtotal) {
             this.id = id;
             this.productId = productId;
             this.productName = productName;
+            this.sellerId = sellerId;
             this.quantity = quantity;
             this.price = price;
             this.subtotal = subtotal;
@@ -94,6 +110,14 @@ public class CartDto {
 
         public void setProductName(String productName) {
             this.productName = productName;
+        }
+
+        public Long getSellerId() {
+            return sellerId;
+        }
+
+        public void setSellerId(Long sellerId) {
+            this.sellerId = sellerId;
         }
 
         public Integer getQuantity() {

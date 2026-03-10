@@ -55,6 +55,7 @@ public class CheckoutCartController {
                 item.getCartItemId(),
                 item.getProductId(),
                 item.getProductName(),
+                item.getSellerId(),
                 item.getQuantity(),
                 item.getProductPrice(),
                 item.getSubtotal()

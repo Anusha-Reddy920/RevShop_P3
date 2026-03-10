@@ -10,6 +10,7 @@ public class CreateOrderRequest {
     private String contactName;
     private String phoneNumber;
     private String paymentMethod;
+    private String paymentStatus;
     private Double totalAmount;
     private List<OrderItemRequest> items;
 
@@ -18,13 +19,14 @@ public class CreateOrderRequest {
 
     public CreateOrderRequest(Long userId, String shippingAddress, String billingAddress,
                               String contactName, String phoneNumber, String paymentMethod,
-                              Double totalAmount, List<OrderItemRequest> items) {
+                              String paymentStatus, Double totalAmount, List<OrderItemRequest> items) {
         this.userId = userId;
         this.shippingAddress = shippingAddress;
         this.billingAddress = billingAddress;
         this.contactName = contactName;
         this.phoneNumber = phoneNumber;
         this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
         this.totalAmount = totalAmount;
         this.items = items;
     }
@@ -77,6 +79,14 @@ public class CreateOrderRequest {
         this.paymentMethod = paymentMethod;
     }
 
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
     public Double getTotalAmount() {
         return totalAmount;
     }
@@ -96,17 +106,19 @@ public class CreateOrderRequest {
     public static class OrderItemRequest {
         private Long productId;
         private String productName;
+        private Long sellerId;
         private Integer quantity;
-        private Double price;
+        private Double priceAtPurchase;
 
         public OrderItemRequest() {
         }
 
-        public OrderItemRequest(Long productId, String productName, Integer quantity, Double price) {
+        public OrderItemRequest(Long productId, String productName, Long sellerId, Integer quantity, Double priceAtPurchase) {
             this.productId = productId;
             this.productName = productName;
+            this.sellerId = sellerId;
             this.quantity = quantity;
-            this.price = price;
+            this.priceAtPurchase = priceAtPurchase;
         }
 
         public Long getProductId() {
@@ -125,6 +137,14 @@ public class CreateOrderRequest {
             this.productName = productName;
         }
 
+        public Long getSellerId() {
+            return sellerId;
+        }
+
+        public void setSellerId(Long sellerId) {
+            this.sellerId = sellerId;
+        }
+
         public Integer getQuantity() {
             return quantity;
         }
@@ -133,12 +153,12 @@ public class CreateOrderRequest {
             this.quantity = quantity;
         }
 
-        public Double getPrice() {
-            return price;
+        public Double getPriceAtPurchase() {
+            return priceAtPurchase;
         }
 
-        public void setPrice(Double price) {
-            this.price = price;
+        public void setPriceAtPurchase(Double priceAtPurchase) {
+            this.priceAtPurchase = priceAtPurchase;
         }
     }
 }

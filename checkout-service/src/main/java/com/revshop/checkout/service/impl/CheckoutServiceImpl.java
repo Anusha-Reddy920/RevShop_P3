@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
@@ -88,8 +87,8 @@ public class CheckoutServiceImpl implements CheckoutService {
         session.setShippingAddress(request.getShippingAddress());
         session.setBillingAddress(request.getBillingAddress() != null ?
                 request.getBillingAddress() : request.getShippingAddress());
-        session.setContactName(request.getName());
-        session.setPhoneNumber(request.getPhone());
+        session.setContactName(request.getContactName());
+        session.setPhoneNumber(request.getPhoneNumber());
         session.setStatus(CheckoutStatus.ADDRESS_ADDED);
 
         session = checkoutSessionRepository.save(session);
@@ -99,7 +98,7 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public CheckoutResponse getCheckoutSession(Long sessionId, Long userId) {
         log.info("Fetching checkout session: {} for user: {}", sessionId, userId);
 

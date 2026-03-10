@@ -141,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
     public List<SellerProductResponse> getSellerProducts(Long sellerId) {
         log.info("Fetching all products for seller: {}", sellerId);
 
-        List<Product> products = productRepository.findBySellerId(sellerId);
+        List<Product> products = productRepository.findBySellerIdAndActiveTrue(sellerId);
 
         return products.stream()
                 .map(this::mapToSellerProductResponse)
@@ -195,6 +195,18 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductResponse> getProductsByIds(List<Long> ids) {
+        log.info("Fetching products for ids: {}", ids);
+
+        List<Product> products = productRepository.findAllById(ids);
+
+        return products.stream()
+                .filter(Product::getActive)
+                .map(this::mapToProductResponse)
+                .collect(Collectors.toList());
+    }
+
     // ========== Internal Operations ==========
 
     @Override
@@ -224,6 +236,18 @@ public class ProductServiceImpl implements ProductService {
         product.setQuantity(newQuantity);
         productRepository.save(product);
         log.info("Stock updated successfully for product: {}. New quantity: {}", id, newQuantity);
+    }
+
+    @Override
+    @Transactional
+    public void updateRating(Long id, Double rating) {
+        log.info("Internal: Updating rating for product {} to: {}", id, rating);
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+
+        product.setRating(rating);
+        productRepository.save(product);
     }
 
     // ========== Category Operations ==========

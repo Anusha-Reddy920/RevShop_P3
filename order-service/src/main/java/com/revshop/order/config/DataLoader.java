@@ -35,7 +35,7 @@ public class DataLoader implements CommandLineRunner {
         // Sample Order 1
         Order order1 = new Order();
         order1.setUserId(1L);
-        order1.setTotalAmount(299.99);
+        order1.setTotalAmount(79.99);
         order1.setShippingAddress("123 Main St, New York, NY 10001");
         order1.setBillingAddress("123 Main St, New York, NY 10001");
         order1.setContactName("John Doe");
@@ -47,19 +47,19 @@ public class DataLoader implements CommandLineRunner {
 
         OrderItem item1 = new OrderItem();
         item1.setProductId(1L);
-        item1.setProductName("Laptop");
+        item1.setProductName("Wireless Headphones");
         item1.setSellerId(2L);
         item1.setQuantity(1);
-        item1.setPriceAtPurchase(299.99);
-        item1.setSubtotal(299.99);
+        item1.setPriceAtPurchase(79.99);
+        item1.setSubtotal(79.99);
         order1.addOrderItem(item1);
 
         orderRepository.save(order1);
 
         // Sample Order 2
         Order order2 = new Order();
-        order2.setUserId(2L);
-        order2.setTotalAmount(149.98);
+        order2.setUserId(3L);
+        order2.setTotalAmount(39.98);
         order2.setShippingAddress("456 Oak Ave, Los Angeles, CA 90001");
         order2.setBillingAddress("456 Oak Ave, Los Angeles, CA 90001");
         order2.setContactName("Jane Smith");
@@ -70,12 +70,12 @@ public class DataLoader implements CommandLineRunner {
         order2.setStatus(OrderStatus.SHIPPED);
 
         OrderItem item2 = new OrderItem();
-        item2.setProductId(2L);
-        item2.setProductName("Wireless Mouse");
-        item2.setSellerId(1L);
+        item2.setProductId(3L);
+        item2.setProductName("Men's T-Shirt");
+        item2.setSellerId(4L);
         item2.setQuantity(2);
-        item2.setPriceAtPurchase(74.99);
-        item2.setSubtotal(149.98);
+        item2.setPriceAtPurchase(19.99);
+        item2.setSubtotal(39.98);
         order2.addOrderItem(item2);
 
         orderRepository.save(order2);
@@ -90,7 +90,7 @@ public class DataLoader implements CommandLineRunner {
         notificationRepository.save(notification1);
 
         Notification notification2 = new Notification(
-                2L,
+                3L,
                 "Your order #" + order2.getId() + " has been shipped!",
                 NotificationType.ORDER_SHIPPED,
                 order2.getId()

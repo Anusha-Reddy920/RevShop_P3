@@ -64,6 +64,7 @@ public class CartServiceImpl implements CartService {
                     product.getId(),
                     product.getName(),
                     product.getPrice(),
+                    product.getSellerId(),
                     request.getQuantity()
             );
             cart.addItem(newItem);
@@ -169,6 +170,7 @@ public class CartServiceImpl implements CartService {
                 item.getProductId(),
                 item.getProductName(),
                 item.getProductPrice(),
+                item.getSellerId(),
                 item.getQuantity(),
                 item.getSubtotal()
         );

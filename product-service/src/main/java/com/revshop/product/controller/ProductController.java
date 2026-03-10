@@ -58,4 +58,11 @@ public class ProductController {
         List<ProductResponse> products = productService.searchProducts(keyword);
         return ResponseEntity.ok(products);
     }
+
+    @PostMapping("/batch")
+    public ResponseEntity<List<ProductResponse>> getProductsBatch(@RequestBody List<Long> ids) {
+        log.info("POST /api/products/batch for ids: {}", ids);
+        List<ProductResponse> products = productService.getProductsByIds(ids);
+        return ResponseEntity.ok(products);
+    }
 }

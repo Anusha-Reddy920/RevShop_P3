@@ -9,6 +9,7 @@ public class ProductDto {
     private Integer quantity;
     private String imageUrl;
     private String category;
+    private Long sellerId;
 
     // Constructors
     public ProductDto() {
@@ -80,5 +81,13 @@ public class ProductDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
     }
 }

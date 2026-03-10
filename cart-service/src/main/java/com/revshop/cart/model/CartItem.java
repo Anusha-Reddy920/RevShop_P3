@@ -27,6 +27,9 @@ public class CartItem {
     private Double productPrice;
 
     @Column(nullable = false)
+    private Long sellerId;
+
+    @Column(nullable = false)
     private Integer quantity;
 
     @Column(nullable = false, updatable = false)
@@ -41,10 +44,11 @@ public class CartItem {
     public CartItem() {
     }
 
-    public CartItem(Long productId, String productName, Double productPrice, Integer quantity) {
+    public CartItem(Long productId, String productName, Double productPrice, Long sellerId, Integer quantity) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
+        this.sellerId = sellerId;
         this.quantity = quantity;
     }
 
@@ -87,6 +91,14 @@ public class CartItem {
 
     public void setProductPrice(Double productPrice) {
         this.productPrice = productPrice;
+    }
+
+    public Long getSellerId() {
+        return sellerId;
+    }
+
+    public void setSellerId(Long sellerId) {
+        this.sellerId = sellerId;
     }
 
     public Integer getQuantity() {

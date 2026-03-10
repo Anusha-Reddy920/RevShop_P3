@@ -29,11 +29,15 @@ public interface ProductService {
 
     List<ProductResponse> searchProducts(String keyword);
 
+    List<ProductResponse> getProductsByIds(List<Long> ids);
+
     // ========== Internal Operations ==========
 
     ProductResponse getProductById(Long id);
 
     void updateStock(Long id, Integer quantity);
+
+    void updateRating(Long id, Double rating);
 
     // ========== Category Operations ==========
 

@@ -11,20 +11,20 @@ public class AddressRequest {
     private String billingAddress;
 
     @NotBlank(message = "Contact name is required")
-    private String name;
+    private String contactName;
 
     @NotBlank(message = "Phone number is required")
     @Pattern(regexp = "^\\+?[0-9]{10,15}$", message = "Phone number must be 10 to 15 digits")
-    private String phone;
+    private String phoneNumber;
 
     public AddressRequest() {
     }
 
-    public AddressRequest(String shippingAddress, String billingAddress, String name, String phone) {
+    public AddressRequest(String shippingAddress, String billingAddress, String contactName, String phoneNumber) {
         this.shippingAddress = shippingAddress;
         this.billingAddress = billingAddress;
-        this.name = name;
-        this.phone = phone;
+        this.contactName = contactName;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getShippingAddress() {
@@ -43,19 +43,19 @@ public class AddressRequest {
         this.billingAddress = billingAddress;
     }
 
-    public String getName() {
-        return name;
+    public String getContactName() {
+        return contactName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

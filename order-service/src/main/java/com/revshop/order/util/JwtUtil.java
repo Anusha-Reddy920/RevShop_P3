@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "your-256-bit-secret-key-change-this-in-production-environment-make-it-secure";
+    private static final String SECRET_KEY = "revshop-secret-key-for-jwt-token-generation-p3-2024";
 
     private static SecretKey getSigningKey() {
         byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
@@ -57,6 +57,11 @@ public class JwtUtil {
     }
 
     public static Long getUserIdFromRequest(HttpServletRequest request) {
+        String forwardedUserId = request.getHeader("X-User-Id");
+        if (forwardedUserId != null && !forwardedUserId.isBlank()) {
+            return Long.parseLong(forwardedUserId);
+        }
+
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);

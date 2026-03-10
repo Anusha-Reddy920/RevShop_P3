@@ -14,8 +14,8 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    // Find by seller ID (for Kavya's seller dashboard)
-    List<Product> findBySellerId(Long sellerId);
+    // Find active products by seller ID (for the seller dashboard)
+    List<Product> findBySellerIdAndActiveTrue(Long sellerId);
 
     // Find by category ID with pagination (for Jatin's buyer view)
     Page<Product> findByCategoryIdAndActiveTrue(Long categoryId, Pageable pageable);

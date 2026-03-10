@@ -1,22 +1,21 @@
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: revshop-postgres
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: revshop-mysql
     environment:
-      POSTGRES_USER: revshop
-      POSTGRES_PASSWORD: revshop123
-      POSTGRES_DB: revshop
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: revshop_p3
     ports:
-      - "5432:5432"
+      - "3306:3306"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-data:/var/lib/mysql
     networks:
       - revshop-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U revshop"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -33,9 +32,10 @@ services:
       - revshop-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
   # Discovery Server
   discovery-server:
@@ -52,11 +52,13 @@ services:
       - revshop-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://localhost:8761/eureka/
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
   # API Gateway
   api-gateway:
@@ -82,7 +84,7 @@ services:
       dockerfile: Dockerfile
     container_name: revshop-auth-service
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
@@ -90,9 +92,11 @@ services:
       - revshop-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/revshop
-      - SPRING_DATASOURCE_USERNAME=revshop
-      - SPRING_DATASOURCE_PASSWORD=revshop123
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_p3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
 
   # Product Service
@@ -102,7 +106,7 @@ services:
       dockerfile: Dockerfile
     container_name: revshop-product-service
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
@@ -110,9 +114,11 @@ services:
       - revshop-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/revshop
-      - SPRING_DATASOURCE_USERNAME=revshop
-      - SPRING_DATASOURCE_PASSWORD=revshop123
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_p3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
 
   # Cart Service
@@ -122,7 +128,7 @@ services:
       dockerfile: Dockerfile
     container_name: revshop-cart-service
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
@@ -130,9 +136,11 @@ services:
       - revshop-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/revshop
-      - SPRING_DATASOURCE_USERNAME=revshop
-      - SPRING_DATASOURCE_PASSWORD=revshop123
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_p3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
 
   # Checkout Service
@@ -142,7 +150,7 @@ services:
       dockerfile: Dockerfile
     container_name: revshop-checkout-service
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
@@ -150,9 +158,11 @@ services:
       - revshop-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/revshop
-      - SPRING_DATASOURCE_USERNAME=revshop
-      - SPRING_DATASOURCE_PASSWORD=revshop123
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_p3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
 
   # Order Service
@@ -162,7 +172,7 @@ services:
       dockerfile: Dockerfile
     container_name: revshop-order-service
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       discovery-server:
         condition: service_healthy
@@ -170,14 +180,29 @@ services:
       - revshop-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/revshop
-      - SPRING_DATASOURCE_USERNAME=revshop
-      - SPRING_DATASOURCE_PASSWORD=revshop123
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/revshop_p3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-server:8761/eureka/
+
+  # Frontend (Angular)
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: revshop-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - revshop-network
 
 networks:
   revshop-network:
     driver: bridge
 
 volumes:
-  postgres-data:
+  mysql-data:
